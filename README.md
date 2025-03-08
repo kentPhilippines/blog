@@ -186,14 +186,4 @@ rm -rf cache/*
 
 ## 许可证
 
-本项目采用 [MIT许可证](https://opensource.org/licenses/MIT) 发布，详情请查看LICENSE文件。
-
-## 联系与支持
-
-如有问题或建议，请通过以下方式联系我们：
-- 提交GitHub Issue
-- 发送邮件至：support@example.com
-
----
-
-感谢您使用新闻博客系统！
+ 
