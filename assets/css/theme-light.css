@@ -1,0 +1,206 @@
+/**
+ * 浅色主题 - views1模板
+ */
+
+:root {
+    --primary-color: #2766d8;
+    --secondary-color: #6c757d;
+    --accent-color: #ff6b6b;
+    --success-color: #28a745;
+    --info-color: #17a2b8;
+    --warning-color: #ffc107;
+    --danger-color: #dc3545;
+    --light-bg: #f8f9fa;
+    --dark-bg: #343a40;
+    --text-color: #212529;
+    --text-muted: #6c757d;
+    --text-light: #f8f9fa;
+    --border-color: #dee2e6;
+    --card-bg: #ffffff;
+    --card-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+
+body {
+    background-color: var(--light-bg);
+    color: var(--text-color);
+}
+
+.card {
+    background-color: var(--card-bg);
+    border-color: var(--border-color);
+    box-shadow: var(--card-shadow);
+}
+
+.bg-white {
+    background-color: var(--card-bg) !important;
+}
+
+.bg-light {
+    background-color: var(--light-bg) !important;
+}
+
+.text-dark {
+    color: var(--text-color) !important;
+}
+
+.text-muted {
+    color: var(--text-muted) !important;
+}
+
+.border,
+.border-top,
+.border-bottom,
+.border-start,
+.border-end {
+    border-color: var(--border-color) !important;
+}
+
+/* 导航条样式 */
+.navbar-light {
+    background-color: var(--card-bg);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.navbar-light .navbar-brand,
+.navbar-light .nav-link {
+    color: var(--text-color);
+}
+
+.navbar-light .navbar-toggler {
+    color: var(--text-color);
+    border-color: var(--border-color);
+}
+
+/* 表单元素样式 */
+.form-control,
+.input-group-text {
+    background-color: var(--card-bg);
+    border-color: var(--border-color);
+    color: var(--text-color);
+}
+
+.form-control:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(39, 102, 216, 0.25);
+}
+
+.form-select {
+    background-color: var(--card-bg);
+    border-color: var(--border-color);
+    color: var(--text-color);
+}
+
+/* 按钮样式 */
+.btn-outline-primary {
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-outline-primary:hover {
+    background-color: var(--primary-color);
+    color: var(--card-bg);
+}
+
+.btn-light {
+    background-color: var(--light-bg);
+    border-color: var(--border-color);
+    color: var(--text-color);
+}
+
+.btn-light:hover {
+    background-color: #e2e6ea;
+    border-color: #dae0e5;
+}
+
+/* 表格样式 */
+.table {
+    color: var(--text-color);
+}
+
+.table-striped > tbody > tr:nth-of-type(odd) > * {
+    background-color: rgba(0, 0, 0, 0.02);
+}
+
+/* 链接颜色 */
+a:not(.btn) {
+    color: var(--primary-color);
+}
+
+a:hover:not(.btn) {
+    color: #1a4ba8;
+}
+
+/* 徽章样式 */
+.badge.bg-light {
+    background-color: var(--light-bg) !important;
+    color: var(--text-color) !important;
+}
+
+/* 导航标签 */
+.nav-tabs .nav-link {
+    color: var(--text-color);
+}
+
+.nav-tabs .nav-link.active {
+    color: var(--primary-color);
+    background-color: var(--card-bg);
+    border-color: var(--border-color) var(--border-color) var(--card-bg);
+}
+
+/* 分页样式 */
+.page-link {
+    background-color: var(--card-bg);
+    border-color: var(--border-color);
+    color: var(--primary-color);
+}
+
+.page-item.active .page-link {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.page-item.disabled .page-link {
+    background-color: var(--light-bg);
+    border-color: var(--border-color);
+}
+
+/* 覆盖部分Bootstrap样式以适应主题 */
+.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-primary:hover,
+.btn-primary:focus {
+    background-color: #1b55c2;
+    border-color: #1b55c2;
+}
+
+.text-primary {
+    color: var(--primary-color) !important;
+}
+
+.bg-primary {
+    background-color: var(--primary-color) !important;
+}
+
+.border-primary {
+    border-color: var(--primary-color) !important;
+}
+
+/* 页脚样式 */
+.site-footer {
+    background-color: var(--dark-bg);
+    color: var(--text-light);
+}
+
+.bg-darker {
+    background-color: var(--dark-bg);
+}
+
+/* 按钮悬停效果 */
+.btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+} 

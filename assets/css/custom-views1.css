@@ -1,0 +1,445 @@
+/**
+ * 自定义样式 - views1模板
+ */
+
+/* 通用样式 */
+:root {
+    --primary-color: #2766d8;
+    --secondary-color: #6c757d;
+    --accent-color: #ff6b6b;
+    --success-color: #28a745;
+    --info-color: #17a2b8;
+    --warning-color: #ffc107;
+    --danger-color: #dc3545;
+    --light-bg: #f8f9fa;
+    --dark-bg: #343a40;
+    --darker-bg: #212529;
+    --text-color: #212529;
+    --text-muted: #6c757d;
+    --text-light: #f8f9fa;
+    --border-color: #dee2e6;
+    --card-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    --transition-speed: 0.3s;
+}
+
+body {
+    font-family: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+}
+
+/* 导航栏样式 */
+.navbar-brand {
+    font-weight: 600;
+}
+
+.hot-tags-bar {
+    white-space: nowrap;
+    overflow-x: auto;
+    scrollbar-width: thin;
+}
+
+.hot-tags-bar::-webkit-scrollbar {
+    height: 4px;
+}
+
+.hot-tags-bar::-webkit-scrollbar-thumb {
+    background-color: var(--border-color);
+    border-radius: 2px;
+}
+
+.hot-tags-scroll {
+    overflow-x: auto;
+    white-space: nowrap;
+    padding-bottom: 5px;
+    scrollbar-width: thin;
+}
+
+/* 首页样式 */
+.section-heading-icon {
+    width: 4px;
+    height: 18px;
+    top: 3px;
+    left: 0;
+    border-radius: 2px;
+}
+
+/* 新闻卡片样式 */
+.news-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.news-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+.news-card .card-img-top {
+    height: 180px;
+    object-fit: cover;
+}
+
+.news-card .card-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.news-card .card-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+
+.news-card .card-text {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    margin-bottom: 0.75rem;
+}
+
+.news-card .card-footer {
+    background-color: transparent;
+    border-top: 1px solid var(--border-color);
+    padding: 0.75rem 1.25rem;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+.news-card .card-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: auto;
+    font-size: 0.85rem;
+}
+
+/* 分类标签样式 */
+.category-badge {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 2rem;
+    text-transform: uppercase;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+}
+
+/* 热门标签样式 */
+.hot-tag {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: var(--accent-color);
+    color: white;
+    padding: 0.25rem 0.5rem;
+    border-radius: 2px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    z-index: 1;
+}
+
+/* 特色新闻轮播 */
+.featured-carousel .carousel-item {
+    height: 400px;
+}
+
+.featured-carousel .carousel-item img {
+    height: 100%;
+    object-fit: cover;
+}
+
+.featured-carousel .carousel-caption {
+    background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 100%);
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 2rem;
+    text-align: left;
+}
+
+.featured-carousel .carousel-caption h3 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.featured-carousel .carousel-caption p {
+    font-size: 1rem;
+    margin-bottom: 1rem;
+}
+
+/* 侧边栏样式 */
+.sidebar-section {
+    margin-bottom: 2rem;
+}
+
+.sidebar-section .section-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--primary-color);
+}
+
+.sidebar-section .list-group-item {
+    border-left: none;
+    border-right: none;
+    padding: 0.75rem 0;
+}
+
+.sidebar-section .list-group-item:first-child {
+    border-top: none;
+}
+
+.sidebar-section .list-group-item:last-child {
+    border-bottom: none;
+}
+
+/* 热门文章列表 */
+.popular-post {
+    display: flex;
+    margin-bottom: 1rem;
+}
+
+.popular-post-img {
+    width: 80px;
+    height: 60px;
+    object-fit: cover;
+    margin-right: 1rem;
+}
+
+.popular-post-content {
+    flex: 1;
+}
+
+.popular-post-title {
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin-bottom: 0.25rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+
+.popular-post-meta {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+/* 页脚样式 */
+.footer-links h5 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 1.25rem;
+    color: #fff;
+}
+
+.footer-links ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.footer-links li {
+    margin-bottom: 0.5rem;
+}
+
+.footer-links a {
+    color: rgba(255, 255, 255, 0.7);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.footer-links a:hover {
+    color: #fff;
+}
+
+.footer-bottom {
+    background-color: rgba(0, 0, 0, 0.2);
+    padding: 1rem 0;
+    margin-top: 2rem;
+}
+
+.qrcode-container {
+    margin-bottom: 1rem;
+}
+
+.qrcode-text {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+/* 面包屑导航 */
+.breadcrumb-custom {
+    background-color: transparent;
+    padding: 0.75rem 0;
+    margin-bottom: 1.5rem;
+    font-size: 0.9rem;
+}
+
+.breadcrumb-item + .breadcrumb-item::before {
+    content: "›";
+    font-size: 1.2rem;
+    line-height: 1;
+    vertical-align: middle;
+}
+
+/* 文章详情页样式 */
+.article-header {
+    margin-bottom: 2rem;
+}
+
+.article-title {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+.article-meta {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+.article-meta > div {
+    margin-right: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.article-featured-img {
+    width: 100%;
+    max-height: 500px;
+    object-fit: cover;
+    margin-bottom: 2rem;
+    border-radius: 0.25rem;
+}
+
+.article-content {
+    font-size: 1.1rem;
+    line-height: 1.8;
+}
+
+.article-content p {
+    margin-bottom: 1.5rem;
+}
+
+.article-content img {
+    max-width: 100%;
+    height: auto;
+    margin: 1.5rem 0;
+    border-radius: 0.25rem;
+}
+
+.article-content h2 {
+    font-size: 1.6rem;
+    font-weight: 600;
+    margin: 2rem 0 1rem;
+}
+
+.article-content h3 {
+    font-size: 1.4rem;
+    font-weight: 600;
+    margin: 1.75rem 0 1rem;
+}
+
+.article-tags {
+    margin: 2rem 0;
+}
+
+.article-tag {
+    display: inline-block;
+    margin-right: 0.5rem;
+    margin-bottom: 0.5rem;
+    padding: 0.25rem 0.75rem;
+    background-color: var(--light-bg);
+    border-radius: 2rem;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.article-tag:hover {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+/* 回到顶部按钮 */
+.back-to-top {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 40px;
+    height: 40px;
+    background-color: var(--primary-color);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    z-index: 1000;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.back-to-top:hover {
+    background-color: #1b55c2;
+    transform: translateY(-3px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+}
+
+/* 响应式调整 */
+@media (max-width: 767.98px) {
+    .featured-carousel .carousel-item {
+        height: 300px;
+    }
+    
+    .featured-carousel .carousel-caption h3 {
+        font-size: 1.25rem;
+    }
+    
+    .article-title {
+        font-size: 1.5rem;
+    }
+    
+    .article-content {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .news-card .card-img-top {
+        height: 160px;
+    }
+    
+    .featured-carousel .carousel-item {
+        height: 250px;
+    }
+    
+    .featured-carousel .carousel-caption {
+        padding: 1rem;
+    }
+    
+    .featured-carousel .carousel-caption h3 {
+        font-size: 1.1rem;
+    }
+    
+    .featured-carousel .carousel-caption p {
+        font-size: 0.9rem;
+    }
+} 
