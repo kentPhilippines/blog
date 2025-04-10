@@ -9,13 +9,9 @@ $apiClient = new ApiClient();
 // 获取域名配置
 $domainConfigResponse = $apiClient->getDomainConfig(SITE_DOMAIN);
 $domainConfig = isset($domainConfigResponse['data']) ? $domainConfigResponse['data'] : null;
-
+error_log("检索页面 域名配置: " . json_encode($domainConfig));
 // 设置视图路径
-if ($domainConfig && isset($domainConfig['viewsPath'])) {
-    define('VIEWS_PATH', $domainConfig['viewsPath']);
-} else {
-    define('VIEWS_PATH', 'views');
-}
+$viewsPath = Utils::getViewsPath($apiClient, SITE_DOMAIN);
 
 // 获取分类列表（用于导航）
 $categoryResponse = $apiClient->getCategoryList();
@@ -29,6 +25,18 @@ $tags = isset($tagResponse['data']) ? $tagResponse['data'] : [];
 $hotNewsResponse = $apiClient->getHotNews();
 $hotNews = isset($hotNewsResponse['data']) ? $hotNewsResponse['data'] : [];
 
+// 获取热门搜索数据（用于侧边栏）
+$hotSearches = [];
+if (!empty($hotNews)) {
+    // 将热门新闻转换为热门搜索数据
+    foreach (array_slice($hotNews, 0, 10) as $index => $news) {
+        $hotSearches[] = [
+            'keyword' => $news['title'] ?? '',
+            'count' => $news['viewCount'] ?? 0
+        ];
+    }
+}
+
 // 处理搜索
 $keyword = isset($_GET['keyword']) ? trim($_GET['keyword']) : '';
 $pageNum = isset($_GET['page']) ? intval($_GET['page']) : 1;
@@ -37,6 +45,9 @@ $pageSize = DEFAULT_PAGE_SIZE;
 $searchResults = [];
 $totalPages = 0;
 $totalItems = 0;
+
+// 记录搜索开始时间
+$searchStartTime = microtime(true);
 
 if (!empty($keyword)) {
     $searchResponse = $apiClient->searchNews($keyword, $pageNum, $pageSize);
@@ -47,6 +58,10 @@ if (!empty($keyword)) {
         $totalItems = isset($searchResponse['data']['total']) ? $searchResponse['data']['total'] : 0;
     }
 }
+
+// 计算搜索耗时
+$searchTime = microtime(true) - $searchStartTime;
+$totalResults = $totalItems;
 
 // 生成分页HTML
 $urlPattern = '?keyword=' . urlencode($keyword) . '&page={page}';
@@ -67,8 +82,17 @@ if (!empty($keyword)) {
     $breadcrumbs[] = ['text' => $keyword, 'url' => '/search.php?keyword=' . urlencode($keyword)];
 }
 
-// 设置视图路径
-$viewPath = VIEWS_PATH . '/search/index.php';
+ 
+    $viewPath = VIEWS_PATH . '/search/index.php';
+//控制台日志
+error_log("搜索关键词: " . $keyword);
+error_log("当前页码: " . $pageNum);
+error_log("每页显示数量: " . $pageSize);
+error_log("搜索结果总数: " . $totalResults);
+error_log("总页数: " . $totalPages);
+error_log("搜索耗时: " . $searchTime . " 秒");
+error_log("搜索页面加载完成，耗时: " . $searchTime . " 秒");
+error_log("页面位置：" . $viewPath);
 
 // 包含主布局模板
 include VIEWS_PATH . '/layouts/main.php';

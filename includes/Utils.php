@@ -71,52 +71,50 @@ class Utils {
             return '';
         }
         
-        $html = '<nav aria-label="新闻分页导航"><ul class="pagination pagination-md justify-content-center flex-wrap">';
+        $html = '<div class="ne-pagination">';
         
         // 上一页
         if ($currentPage > 1) {
             $prevUrl = str_replace('{page}', $currentPage - 1, $urlPattern);
-            $html .= '<li class="page-item"><a class="page-link" href="' . $prevUrl . '" aria-label="上一页"><i class="fas fa-chevron-left me-1 small"></i><span>上一页</span></a></li>';
+            $html .= '<a href="' . $prevUrl . '" class="prev">上一页</a>';
         } else {
-            $html .= '<li class="page-item disabled"><span class="page-link"><i class="fas fa-chevron-left me-1 small"></i><span>上一页</span></span></li>';
+            $html .= '<span class="prev disabled">上一页</span>';
+        }
+        
+        // 第一页
+        if ($currentPage > 3) {
+            $html .= '<a href="' . str_replace('{page}', 1, $urlPattern) . '">1</a>';
+            if ($currentPage > 4) {
+                $html .= '<span class="ellipsis">...</span>';
+            }
         }
         
         // 页码
-        $startPage = max(1, $currentPage - 2);
-        $endPage = min($totalPages, $startPage + 4);
-        
-        if ($startPage > 1) {
-            $html .= '<li class="page-item"><a class="page-link" href="' . str_replace('{page}', 1, $urlPattern) . '">1</a></li>';
-            if ($startPage > 2) {
-                $html .= '<li class="page-item disabled"><span class="page-link">...</span></li>';
-            }
-        }
-        
-        for ($i = $startPage; $i <= $endPage; $i++) {
+        for ($i = max(1, $currentPage - 2); $i <= min($totalPages, $currentPage + 2); $i++) {
             if ($i == $currentPage) {
-                $html .= '<li class="page-item active" aria-current="page"><span class="page-link">' . $i . '</span></li>';
+                $html .= '<span class="current">' . $i . '</span>';
             } else {
-                $pageUrl = str_replace('{page}', $i, $urlPattern);
-                $html .= '<li class="page-item"><a class="page-link" href="' . $pageUrl . '">' . $i . '</a></li>';
+                $html .= '<a href="' . str_replace('{page}', $i, $urlPattern) . '">' . $i . '</a>';
             }
         }
         
-        if ($endPage < $totalPages) {
-            if ($endPage < $totalPages - 1) {
-                $html .= '<li class="page-item disabled"><span class="page-link">...</span></li>';
+        // 最后一页
+        if ($currentPage < $totalPages - 2) {
+            if ($currentPage < $totalPages - 3) {
+                $html .= '<span class="ellipsis">...</span>';
             }
-            $html .= '<li class="page-item"><a class="page-link" href="' . str_replace('{page}', $totalPages, $urlPattern) . '">' . $totalPages . '</a></li>';
+            $html .= '<a href="' . str_replace('{page}', $totalPages, $urlPattern) . '">' . $totalPages . '</a>';
         }
         
         // 下一页
         if ($currentPage < $totalPages) {
             $nextUrl = str_replace('{page}', $currentPage + 1, $urlPattern);
-            $html .= '<li class="page-item"><a class="page-link" href="' . $nextUrl . '" aria-label="下一页"><span>下一页</span><i class="fas fa-chevron-right ms-1 small"></i></a></li>';
+            $html .= '<a href="' . $nextUrl . '" class="next">下一页</a>';
         } else {
-            $html .= '<li class="page-item disabled"><span class="page-link"><span>下一页</span><i class="fas fa-chevron-right ms-1 small"></i></span></li>';
+            $html .= '<span class="next disabled">下一页</span>';
         }
         
-        $html .= '</ul></nav>';
+        $html .= '</div>';
         
         return $html;
     }

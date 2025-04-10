@@ -1,7 +1,7 @@
 <?php
 // API配置
-define('API_BASE_URL', 'http://localhost:8080'); // 实际API服务器地址
-
+//define('API_BASE_URL', 'http://localhost:8080'); // 实际API服务器地址
+define('API_BASE_URL', 'http://103.112.99.20:8080'); // 实际API服务器地址
 // 获取当前域名
 $currentDomain = $_SERVER['HTTP_HOST'] ?? $_SERVER['SERVER_NAME'] ?? 'default';
 

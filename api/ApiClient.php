@@ -92,9 +92,11 @@ class ApiClient {
      * @return array 新闻列表数据
      */
     public function getNewsList($pageNum = 1, $pageSize = DEFAULT_PAGE_SIZE, $categoryName = null) {
+        $domainConfig = SITE_DOMAIN;
         $params = [
             'pageNum' => $pageNum,
-            'pageSize' => $pageSize
+            'pageSize' => $pageSize,
+            'domainConfig' => $domainConfig
         ];
         
         if ($categoryName) {
@@ -159,7 +161,8 @@ class ApiClient {
      * @return array 热门新闻数据
      */
     public function getHotNews($limit = 5) {
-        $response = $this->get('/api/news/hot', ['limit' => $limit]);
+        $domainConfig = SITE_DOMAIN;
+        $response = $this->get('/api/news/hot', ['limit' => $limit, 'domainConfig' => $domainConfig ]);
         error_log("获取热门新闻: " . json_encode($response, JSON_UNESCAPED_UNICODE));
         // 处理热门新闻数据，确保每个新闻项都有coverImage字段
         if (isset($response['code']) && $response['code'] == 200 && 
@@ -206,12 +209,14 @@ class ApiClient {
      * @param string $direction 排序方向，默认desc
      * @return array 所有新闻数据
      */
-    public function getAllNews($page = 0, $size = DEFAULT_PAGE_SIZE, $sortBy = 'crawlTime', $direction = 'desc') {
+    public function getAllNews($page = 0, $size = DEFAULT_PAGE_SIZE, $sortBy = 'crawlTime', $direction = 'desc' ) {
+        $domainConfig = SITE_DOMAIN;
         $params = [
             'page' => $page,
             'size' => $size,
             'sortBy' => $sortBy,
-            'direction' => $direction
+            'direction' => $direction,
+            'domainConfig' => $domainConfig
         ];
         
         return $this->get('/api/news', $params);
@@ -226,10 +231,12 @@ class ApiClient {
      * @return array 搜索结果数据
      */
     public function searchNews($keyword, $pageNum = 1, $pageSize = DEFAULT_PAGE_SIZE) {
+        $domainConfig = SITE_DOMAIN;
         $params = [
             'keyword' => $keyword,
             'pageNum' => $pageNum,
-            'pageSize' => $pageSize
+            'pageSize' => $pageSize,
+            'domainConfig' => $domainConfig
         ];
         
         $response = $this->get('/api/news/search', $params);
@@ -277,7 +284,8 @@ class ApiClient {
      * @return array 标签列表数据
      */
     public function getTagList($limit = 20) {
-        $response = $this->get('/api/tag/list', ['limit' => $limit]);
+        $domainConfig = SITE_DOMAIN;
+        $response = $this->get('/api/tag/list', ['limit' => $limit, 'domainConfig' => $domainConfig]);
         
         // 处理标签数据，确保格式一致
         if (isset($response['code']) && $response['code'] == 200 && 
@@ -317,9 +325,11 @@ class ApiClient {
      * @return array 所有标签数据
      */
     public function getAllTags($page = 0, $size = DEFAULT_PAGE_SIZE) {
+        $domainConfig = SITE_DOMAIN;
         $params = [
             'page' => $page,
-            'size' => $size
+            'size' => $size,
+            'domainConfig' => $domainConfig
         ];
         
         return $this->get('/api/tags', $params);
@@ -331,8 +341,12 @@ class ApiClient {
      * @return array 分类列表数据
      */
     public function getCategoryList() {
+        $domainConfig = SITE_DOMAIN;
+        $params = [
+            'domainConfig' => $domainConfig
+        ];
         error_log("开始获取分类列表");
-        $response = $this->get('/api/category/list');
+        $response = $this->get('/api/category/list', $params);
         
         // 处理分类数据，提取category字段和newsCount字段
         if (isset($response['code']) && $response['code'] == 200 && 
@@ -475,5 +489,92 @@ class ApiClient {
                 'data' => null
             ];
         }
+    }
+
+    /**
+     * 发送POST请求到API
+     * 
+     * @param string $endpoint API端点
+     * @param array $data POST数据
+     * @return array 响应数据
+     */
+    public function post($endpoint, $data = []) {
+        $url = $this->baseUrl . $endpoint;
+        
+        // 打印请求信息到控制台
+        error_log("API POST请求: " . $url);
+        error_log("POST数据: " . json_encode($data, JSON_UNESCAPED_UNICODE));
+        
+        // 发送请求
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HEADER, false);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            'Content-Type: application/json',
+            'Accept: application/json'
+        ]);
+        
+        $response = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $error = curl_error($ch);
+        curl_close($ch);
+        
+        // 处理请求错误
+        if ($response === false) {
+            error_log("API POST请求失败: " . $error);
+            return [
+                'code' => 500,
+                'message' => '请求API失败: ' . $error,
+                'data' => null
+            ];
+        }
+        
+        // 处理HTTP错误
+        if ($httpCode != 200) {
+            error_log("API POST HTTP错误: " . $httpCode);
+            return [
+                'code' => $httpCode,
+                'message' => 'API返回HTTP错误: ' . $httpCode,
+                'data' => null
+            ];
+        }
+        
+        // 解析JSON响应
+        $data = json_decode($response, true);
+        if ($data === null) {
+            error_log("API POST响应JSON解析失败");
+            return [
+                'code' => 500,
+                'message' => 'API响应格式错误',
+                'data' => null
+            ];
+        }
+        
+        return $data;
+    }
+
+    /**
+     * 提交评论
+     * 
+     * @param array $commentData 评论数据
+     * @return array 响应数据
+     */
+    public function submitComment($commentData) {
+        return $this->post('/admin/comment/save', $commentData);
+    }
+
+    /**
+     * 点赞评论
+     * 
+     * @param int $commentId 评论ID
+     * @return array 响应数据
+     */
+    public function likeComment($commentId) {
+        return $this->post("/admin/comment/like/{$commentId}", []);
     }
 } 

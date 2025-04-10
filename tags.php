@@ -10,12 +10,7 @@ $apiClient = new ApiClient();
 $domainConfigResponse = $apiClient->getDomainConfig(SITE_DOMAIN);
 $domainConfig = isset($domainConfigResponse['data']) ? $domainConfigResponse['data'] : null;
 
-// 设置视图路径
-if ($domainConfig && isset($domainConfig['views'])) {
-    define('VIEWS_PATH', $domainConfig['views']);
-} else {
-    define('VIEWS_PATH', 'views');
-}
+$viewsPath = Utils::getViewsPath($apiClient, SITE_DOMAIN);
 
 // 获取分类列表
 $categoryResponse = $apiClient->getCategoryList();

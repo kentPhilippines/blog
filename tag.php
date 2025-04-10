@@ -9,13 +9,8 @@ $apiClient = new ApiClient();
 // 获取域名配置
 $domainConfigResponse = $apiClient->getDomainConfig(SITE_DOMAIN);
 $domainConfig = isset($domainConfigResponse['data']) ? $domainConfigResponse['data'] : null;
+$viewsPath = Utils::getViewsPath($apiClient, SITE_DOMAIN);
 
-// 设置视图路径
-if ($domainConfig && isset($domainConfig['views'])) {
-    define('VIEWS_PATH', $domainConfig['views']);
-} else {
-    define('VIEWS_PATH', 'views');
-}
 
 // 检查标签名称参数
 if (!isset($_GET['name']) || empty($_GET['name'])) {
