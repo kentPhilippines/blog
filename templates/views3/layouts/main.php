@@ -41,28 +41,6 @@
     <!-- 主要内容区域 -->
     <main class="ne-main">
         <div class="ne-container">
-            <!-- 面包屑导航 -->
-           <!--  <?php if (!empty($breadcrumbs)): ?>
-            <nav class="ne-breadcrumb" aria-label="面包屑导航">
-                <ol>
-                    <?php foreach ($breadcrumbs as $index => $crumb): ?>
-                        <li>
-                            <?php if (isset($crumb['url'])): ?>
-                                <a href="<?php echo htmlspecialchars($crumb['url']); ?>">
-                                    <?php echo htmlspecialchars($crumb['text']); ?>
-                                </a>
-                            <?php else: ?>
-                                <span><?php echo htmlspecialchars($crumb['text']); ?></span>
-                            <?php endif; ?>
-                            <?php if ($index < count($breadcrumbs) - 1): ?>
-                                <i class="fas fa-angle-right"></i>
-                            <?php endif; ?>
-                        </li>
-                    <?php endforeach; ?>
-                </ol>
-            </nav>
-            <?php endif; ?> -->
-            
             <!-- 页面主要内容 -->
             <?php include $viewPath; ?>
         </div>
@@ -78,10 +56,5 @@
     
     <!-- JavaScript -->
     <script src="/assets/js/views3/main.js"></script>
-    
-    <!-- 统计代码 -->
-    <?php if (defined('ANALYTICS_CODE')): ?>
-        <?php echo ANALYTICS_CODE; ?>
-    <?php endif; ?>
 </body>
 </html> 

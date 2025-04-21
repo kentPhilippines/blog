@@ -3,7 +3,7 @@
     <div class="ne-header-inner">
         <a href="/" class="ne-logo">
             <div class="ne-logo-icon"></div>
-            <div class="ne-logo-text">新闻<span>客户端</span></div>
+            <div class="ne-logo-text"><?php echo htmlspecialchars($domainConfig['title'] ?? DYNAMIC_SITE_NAME); ?><span><?php echo htmlspecialchars($domainConfig['subtitle'] ?? '客户端'); ?></span></div>
         </a>
         <div class="ne-search">
             <form action="/search.php" method="get" role="search">
@@ -33,74 +33,13 @@
             <?php foreach ($categories as $cat): ?>
                 <?php 
                 $catName = is_array($cat) ? ($cat['name'] ?? '') : $cat;
+                $catIcon = is_array($cat) ? ($cat['icon'] ?? 'fas fa-newspaper') : 'fas fa-newspaper';
                 $isActive = isset($GLOBALS['categoryName']) && $GLOBALS['categoryName'] === $catName;
                 ?>
                 <div class="ne-nav-item<?php echo $isActive ? ' active' : ''; ?>">
                     <a href="/category.php?name=<?php echo urlencode($catName); ?>"
                        <?php echo $isActive ? 'aria-current="page"' : ''; ?>>
-                        <?php 
-                        // 为不同分类添加对应的图标
-                        $icon = '';
-                        switch(strtolower($catName)) {
-                            case 'nba':
-                                $icon = '<i class="fas fa-basketball-ball"></i>';
-                                break;
-                            case 'cba':
-                                $icon = '<i class="fas fa-basketball-ball"></i>';
-                                break;
-                            case '中国足球':
-                                $icon = '<i class="fas fa-newspaper"></i>';
-                                break;
-                            case '西甲':
-                                $icon = '<i class="fas fa-futbol"></i>';
-                                break;
-                            case '英超':
-                                $icon = '<i class="fas fa-futbol"></i>';
-                                break;
-                            case '羽毛球':
-                                $icon = '<i class="fas fa-table-tennis"></i>';
-                                break;
-                            case '国字号':
-                                $icon = '<i class="fas fa-newspaper"></i>';
-                                break;
-                            case '乒乓球':
-                                $icon = '<i class="fas fa-newspaper"></i>';
-                                break;
-                            case '意甲':
-                                $icon = '<i class="fas fa-newspaper"></i>';
-                                break;
-                            case '亚冠':
-                                $icon = '<i class="fas fa-newspaper"></i>';
-                                break;
-                            case '法甲':
-                                $icon = '<i class="fas fa-newspaper"></i>';
-                                break;
-                            case '欧冠':
-                                $icon = '<i class="fas fa-newspaper"></i>';
-                                break;
-                            case '游泳':
-                                $icon = '<i class="fas fa-newspaper"></i>';
-                                break;
-                            case '德甲':
-                                $icon = '<i class="fas fa-newspaper"></i>';
-                                break;
-                            case '台球':
-                                $icon = '<i class="fas fa-newspaper"></i>';
-                                break;
-                            case '赛车':
-                                $icon = '<i class="fas fa-newspaper"></i>';
-                                break;
-                            case '田径':
-                                $icon = '<i class="fas fa-newspaper"></i>';
-                                break;
-                            case '排球':
-                                $icon = '<i class="fas fa-volleyball-ball"></i>';
-                                break;
-                            default:
-                                $icon = '<i class="fas fa-newspaper"></i>';
-                        }
-                        echo $icon . ' ' . htmlspecialchars($catName);
-                        ?>
+                        <i class="<?php echo htmlspecialchars($catIcon); ?>"></i> <?php echo htmlspecialchars($catName); ?>
                     </a>
                 </div>
             <?php endforeach; ?>
@@ -116,74 +55,16 @@
                 <i class="fas fa-home"></i>
                 <span>首页</span>
             </a>
-            <?php if (!empty($categories)): ?>
-                <?php foreach ($categories as $cat): ?>
+            <?php if (!empty($domainConfig['categories'])): ?>
+                <?php foreach ($domainConfig['categories'] as $cat): ?>
                     <?php 
-                    $catName = is_array($cat) ? ($cat['name'] ?? '') : $cat;
+                    $catName = $cat['name'] ?? '';
+                    $catIcon = $cat['icon'] ?? 'fas fa-newspaper';
                     $isActive = isset($GLOBALS['categoryName']) && $GLOBALS['categoryName'] === $catName;
-                    $icon = '';
-                    switch(strtolower($catName)) {
-                        case 'nba':
-                            $icon = '<i class="fas fa-basketball-ball"></i>';
-                            break;
-                        case 'cba':
-                            $icon = '<i class="fas fa-basketball-ball"></i>';
-                            break;
-                        case '中国足球':
-                            $icon = '<i class="fas fa-newspaper"></i>';
-                            break;
-                        case '西甲':
-                            $icon = '<i class="fas fa-futbol"></i>';
-                            break;
-                        case '英超':
-                            $icon = '<i class="fas fa-futbol"></i>';
-                            break;
-                        case '羽毛球':
-                            $icon = '<i class="fas fa-table-tennis"></i>';
-                            break;
-                        case '国字号':
-                            $icon = '<i class="fas fa-newspaper"></i>';
-                            break;
-                        case '乒乓球':
-                            $icon = '<i class="fas fa-newspaper"></i>';
-                            break;
-                        case '意甲':
-                            $icon = '<i class="fas fa-newspaper"></i>';
-                            break;
-                        case '亚冠':
-                            $icon = '<i class="fas fa-newspaper"></i>';
-                            break;
-                        case '法甲':
-                            $icon = '<i class="fas fa-newspaper"></i>';
-                            break;
-                        case '欧冠':
-                            $icon = '<i class="fas fa-newspaper"></i>';
-                            break;
-                        case '游泳':
-                            $icon = '<i class="fas fa-newspaper"></i>';
-                            break;
-                        case '德甲':
-                            $icon = '<i class="fas fa-newspaper"></i>';
-                            break;
-                        case '台球':
-                            $icon = '<i class="fas fa-newspaper"></i>';
-                            break;
-                        case '赛车':
-                            $icon = '<i class="fas fa-newspaper"></i>';
-                            break;
-                        case '田径':
-                            $icon = '<i class="fas fa-newspaper"></i>';
-                            break;
-                        case '排球':
-                            $icon = '<i class="fas fa-volleyball-ball"></i>';
-                            break;
-                        default:
-                            $icon = '<i class="fas fa-newspaper"></i>';
-                    }
                     ?>
                     <a href="/category.php?name=<?php echo urlencode($catName); ?>" 
                        class="ne-mobile-nav-item<?php echo $isActive ? ' active' : ''; ?>">
-                        <?php echo $icon; ?>
+                        <i class="<?php echo htmlspecialchars($catIcon); ?>"></i>
                         <span><?php echo htmlspecialchars($catName); ?></span>
                     </a>
                 <?php endforeach; ?>

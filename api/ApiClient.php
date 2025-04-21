@@ -20,11 +20,9 @@ class ApiClient {
         if (!empty($params)) {
             $url .= '?' . http_build_query($params);
         }
-        
         // 打印请求信息到控制台
         error_log("API请求: " . $url);
         error_log("请求参数: " . json_encode($params, JSON_UNESCAPED_UNICODE));
-        
         // 检查缓存
         $cacheKey = md5($url);
         $cachedData = $this->getCache($cacheKey);
@@ -32,7 +30,6 @@ class ApiClient {
             error_log("使用缓存数据: " . $cacheKey);
             return $cachedData;
         }
-        
         // 发送请求
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
@@ -276,7 +273,6 @@ class ApiClient {
         
         return $response;
     }
-    
     /**
      * 获取标签列表
      * 
@@ -543,7 +539,6 @@ class ApiClient {
                 'data' => null
             ];
         }
-        
         // 解析JSON响应
         $data = json_decode($response, true);
         if ($data === null) {
@@ -557,7 +552,6 @@ class ApiClient {
         
         return $data;
     }
-
     /**
      * 提交评论
      * 
@@ -567,7 +561,6 @@ class ApiClient {
     public function submitComment($commentData) {
         return $this->post('/admin/comment/save', $commentData);
     }
-
     /**
      * 点赞评论
      * 

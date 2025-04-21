@@ -153,20 +153,27 @@ if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'
             </div>
             <?php endif; ?>
 
-            <!-- 热门标签 -->
-            <?php if (!empty($hotTags)): ?>
-            <div class="ne-hot-tags">
+            <!-- 热门新闻 -->
+            <?php if (!empty($hotNews)): ?>
+            <div class="ne-hot-news">
                 <h3 class="ne-sidebar-title">
-                    <i class="iconfont icon-tag"></i> 热门标签
+                    <i class="iconfont icon-hot"></i> 热门新闻
                 </h3>
-                <div class="ne-tag-cloud">
-                    <?php foreach ($hotTags as $tag): ?>
-                    <a href="/tag.php?name=<?php echo urlencode($tag['name']); ?>" 
-                       class="ne-tag-item">
-                        <?php echo htmlspecialchars($tag['name']); ?>
-                        <?php if (!empty($tag['count'])): ?>
-                        <span class="ne-tag-count"><?php echo (int)$tag['count']; ?></span>
+                <div class="ne-hot-news-list">
+                    <?php foreach ($hotNews as $item): ?>
+                    <a href="/news.php?id=<?php echo $item['id']; ?>" class="ne-hot-news-item">
+                        <?php if (!empty($item['coverImage'])): ?>
+                        <div class="ne-hot-news-image">
+                            <img src="<?php echo htmlspecialchars($item['coverImage']); ?>" alt="<?php echo htmlspecialchars($item['title']); ?>">
+                        </div>
                         <?php endif; ?>
+                        <div class="ne-hot-news-info">
+                            <h4 class="ne-hot-news-title"><?php echo htmlspecialchars($item['title']); ?></h4>
+                            <div class="ne-hot-news-meta">
+                                <span class="ne-hot-news-views"><i class="iconfont icon-eye"></i> <?php echo number_format($item['viewCount']); ?></span>
+                                <span class="ne-hot-news-date"><?php echo date('m-d', strtotime($item['publishTime'])); ?></span>
+                            </div>
+                        </div>
                     </a>
                     <?php endforeach; ?>
                 </div>

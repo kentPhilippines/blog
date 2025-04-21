@@ -3,10 +3,22 @@
     <div class="ne-footer-inner">
         <!-- 友情链接 -->
         <div class="ne-footer-links">
-            <a href="/about.php">关于我们</a>
-            <a href="/contact.php">联系我们</a>
-            <a href="/privacy.php">隐私政策</a>
-            <a href="/terms.php">服务条款</a>
+            <a href="/about.php" 
+               title="关于<?php echo htmlspecialchars($domainConfig['title'] ?? DYNAMIC_SITE_NAME); ?>" 
+               rel="nofollow" 
+               aria-label="了解更多关于我们的信息">关于我们</a>
+            <a href="/contact.php" 
+               title="联系<?php echo htmlspecialchars($domainConfig['title'] ?? DYNAMIC_SITE_NAME); ?>" 
+               rel="nofollow" 
+               aria-label="联系我们获取帮助">联系我们</a>
+            <a href="/privacy.php" 
+               title="<?php echo htmlspecialchars($domainConfig['title'] ?? DYNAMIC_SITE_NAME); ?>隐私政策" 
+               rel="nofollow" 
+               aria-label="阅读我们的隐私政策">隐私政策</a>
+            <a href="/terms.php" 
+               title="<?php echo htmlspecialchars($domainConfig['title'] ?? DYNAMIC_SITE_NAME); ?>服务条款" 
+               rel="nofollow" 
+               aria-label="查看服务条款">服务条款</a>
             <a href="/sitemap.php">网站地图</a>
             <a href="/rss.php">RSS订阅</a>
         </div>

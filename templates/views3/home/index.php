@@ -16,33 +16,12 @@
                     <?php foreach ($categories as $cat): ?>
                         <?php 
                         $catName = is_array($cat) ? ($cat['name'] ?? '') : $cat;
+                        $catIcon = is_array($cat) ? ($cat['icon'] ?? 'fas fa-newspaper') : 'fas fa-newspaper';
                         $isActive = isset($GLOBALS['categoryName']) && $GLOBALS['categoryName'] === $catName;
-                        $icon = '';
-                        switch(strtolower($catName)) {
-                            case 'nba':
-                                $icon = '<i class="fas fa-basketball-ball"></i>';
-                                break;
-                            case 'cba':
-                                $icon = '<i class="fas fa-basketball-ball"></i>';
-                                break;
-                            case '中国足球':
-                            case '西甲':
-                            case '英超':
-                                $icon = '<i class="fas fa-futbol"></i>';
-                                break;
-                            case '羽毛球':
-                                $icon = '<i class="fas fa-table-tennis"></i>';
-                                break;
-                            case '排球':
-                                $icon = '<i class="fas fa-volleyball-ball"></i>';
-                                break;
-                            default:
-                                $icon = '<i class="fas fa-newspaper"></i>';
-                        }
                         ?>
                         <a href="/category.php?name=<?php echo urlencode($catName); ?>" 
                            class="ne-mobile-nav-item<?php echo $isActive ? ' active' : ''; ?>">
-                            <?php echo $icon; ?>
+                            <i class="<?php echo htmlspecialchars($catIcon); ?>"></i>
                             <span><?php echo htmlspecialchars($catName); ?></span>
                         </a>
                     <?php endforeach; ?>
