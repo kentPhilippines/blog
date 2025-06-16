@@ -44,7 +44,7 @@
                 <article class="ne-news-item">
                     <div class="ne-news-info">
                         <h3 class="ne-news-title">
-                            <a href="/news.php?id=<?php echo htmlspecialchars($news['id'] ?? ''); ?>">
+                            <a href="/news.html?id=<?php echo htmlspecialchars($news['id'] ?? ''); ?>">
                                 <?php echo htmlspecialchars($news['title'] ?? ''); ?>
                             </a>
                         </h3>
@@ -74,7 +74,7 @@
                     </div>
                     <?php if (!empty($news['image'])): ?>
                     <div class="ne-news-image">
-                        <a href="/news.php?id=<?php echo htmlspecialchars($news['id'] ?? ''); ?>">
+                        <a href="/news.html?id=<?php echo htmlspecialchars($news['id'] ?? ''); ?>">
                             <img src="<?php echo htmlspecialchars($news['image']); ?>" 
                                  alt="<?php echo htmlspecialchars($news['title'] ?? ''); ?>">
                         </a>
@@ -111,7 +111,7 @@
                     $isActive = $catName === $categoryName;
                     ?>
                     <li class="ne-category-item<?php echo $isActive ? ' active' : ''; ?>">
-                        <a href="/category.php?name=<?php echo urlencode($catName); ?>">
+                        <a href="/category.php?name=<?php echo urlencode(Utils::categoryToSlug($catName)); ?>">
                             <?php echo htmlspecialchars($catName); ?>
                             <?php if (!empty($cat['count'])): ?>
                             <span class="ne-category-count">(<?php echo (int)$cat['count']; ?>)</span>
@@ -131,7 +131,7 @@
                 </h3>
                 <div class="ne-tag-cloud">
                     <?php foreach ($tags as $tag): ?>
-                    <a href="/tag.php?name=<?php echo urlencode($tag['name']); ?>" 
+                    <a href="/tag.html?name=<?php echo urlencode($tag['name']); ?>" 
                        class="ne-tag-item">
                         <?php echo htmlspecialchars($tag['name']); ?>
                         <?php if (!empty($tag['count'])): ?>
@@ -153,7 +153,7 @@
                     <?php foreach ($relatedNews as $index => $related): ?>
                     <li class="ne-related-item<?php echo $index < 3 ? ' ne-related-top' : ''; ?>">
                         <span class="ne-related-num"><?php echo $index + 1; ?></span>
-                        <a href="/news.php?id=<?php echo htmlspecialchars($related['id']); ?>" class="ne-related-link">
+                        <a href="/news.html?id=<?php echo htmlspecialchars($related['id']); ?>" class="ne-related-link">
                             <?php echo htmlspecialchars($related['title']); ?>
                         </a>
                     </li>

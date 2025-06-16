@@ -6,9 +6,8 @@ require_once 'includes/Utils.php';
 // 初始化API客户端
 $apiClient = new ApiClient();
 
-// 获取域名配置
-$domainConfigResponse = $apiClient->getDomainConfig(SITE_DOMAIN);
-$domainConfig = isset($domainConfigResponse['data']) ? $domainConfigResponse['data'] : null;    
+// 初始化动态站点配置
+$domainConfig = Utils::initDynamicConfig($apiClient, SITE_DOMAIN);    
 
 // 设置视图路径
 if ($domainConfig && isset($domainConfig['views'])) {

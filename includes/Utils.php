@@ -183,4 +183,113 @@ class Utils {
         
         return VIEWS_PATH;
     }
+    
+    /**
+     * 初始化动态站点配置
+     * 
+     * @param object $apiClient API客户端实例
+     * @param string $domain 域名
+     * @return array 域名配置数据
+     */
+    public static function initDynamicConfig($apiClient, $domain = null) {
+        // 如果没有传入域名，使用默认域名
+        if (!$domain) {
+            $domain = defined('SITE_DOMAIN') ? SITE_DOMAIN : 'default';
+        }
+        
+        // 获取域名配置
+        $domainConfigResponse = $apiClient->getDomainConfig($domain);
+        $domainConfig = isset($domainConfigResponse['data']) ? $domainConfigResponse['data'] : null;
+        
+        // 如果成功获取域名配置，覆盖默认配置
+        if ($domainConfig) {
+            // 网站标题
+            if (isset($domainConfig['title']) && !defined('DYNAMIC_SITE_NAME')) {
+                define('DYNAMIC_SITE_NAME', $domainConfig['title']);
+            } elseif (!defined('DYNAMIC_SITE_NAME')) {
+                define('DYNAMIC_SITE_NAME', defined('SITE_NAME') ? SITE_NAME : '新闻博客');
+            }
+            
+            // 网站描述
+            if (isset($domainConfig['description']) && !defined('DYNAMIC_SITE_DESCRIPTION')) {
+                define('DYNAMIC_SITE_DESCRIPTION', $domainConfig['description']);
+            } elseif (!defined('DYNAMIC_SITE_DESCRIPTION')) {
+                define('DYNAMIC_SITE_DESCRIPTION', defined('SITE_DESCRIPTION') ? SITE_DESCRIPTION : '提供最新、最热门的新闻资讯');
+            }
+            
+            // 网站关键词
+            if (isset($domainConfig['keywords']) && !defined('DYNAMIC_SITE_KEYWORDS')) {
+                define('DYNAMIC_SITE_KEYWORDS', $domainConfig['keywords']);
+            } elseif (!defined('DYNAMIC_SITE_KEYWORDS')) {
+                define('DYNAMIC_SITE_KEYWORDS', defined('SITE_KEYWORDS') ? SITE_KEYWORDS : '新闻,博客,资讯,热点');
+            }
+        } else {
+            // 使用默认配置
+            if (!defined('DYNAMIC_SITE_NAME')) {
+                define('DYNAMIC_SITE_NAME', defined('SITE_NAME') ? SITE_NAME : '新闻博客');
+            }
+            if (!defined('DYNAMIC_SITE_DESCRIPTION')) {
+                define('DYNAMIC_SITE_DESCRIPTION', defined('SITE_DESCRIPTION') ? SITE_DESCRIPTION : '提供最新、最热门的新闻资讯');
+            }
+            if (!defined('DYNAMIC_SITE_KEYWORDS')) {
+                define('DYNAMIC_SITE_KEYWORDS', defined('SITE_KEYWORDS') ? SITE_KEYWORDS : '新闻,博客,资讯,热点');
+            }
+        }
+        
+        return $domainConfig;
+    }
+
+    /**
+     * 分类名称映射（中文 -> 英文）
+     */
+    private static $categoryMap = [
+        '中国足球' => 'zhongguozuqiu',
+        '西甲' => 'xijia',
+        'CBA' => 'cba',
+        '英超' => 'yingchao',
+        '羽毛球' => 'yumaoqiu',
+        'NBA' => 'nba',
+        '国字号' => 'guozihao',
+        '乒乓球' => 'pingpangqiu',
+        '意甲' => 'yijia',
+        '亚冠' => 'yaguan',
+        '法甲' => 'fajia',
+        '欧冠' => 'ouguan',
+        '游泳' => 'youyong',
+        '德甲' => 'dejia',
+        '台球' => 'taiqiu',
+        '赛车' => 'saiche',
+        '田径' => 'tianjing',
+        '排球' => 'paiqiu'
+    ];
+
+    /**
+     * 将中文分类名转换为英文slug
+     * 
+     * @param string $chineseName 中文分类名
+     * @return string 英文slug
+     */
+    public static function categoryToSlug($chineseName) {
+        return self::$categoryMap[$chineseName] ?? strtolower($chineseName);
+    }
+
+    /**
+     * 将英文slug转换为中文分类名
+     * 
+     * @param string $slug 英文slug
+     * @return string 中文分类名
+     */
+    public static function slugToCategory($slug) {
+        $flippedMap = array_flip(self::$categoryMap);
+        return $flippedMap[$slug] ?? $slug;
+    }
+
+    /**
+     * 获取所有分类映射
+     * 
+     * @return array 分类映射数组
+     */
+    public static function getCategoryMap() {
+        return self::$categoryMap;
+    }
 } 

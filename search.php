@@ -6,9 +6,8 @@ require_once 'includes/Utils.php';
 // 初始化API客户端
 $apiClient = new ApiClient();
 
-// 获取域名配置
-$domainConfigResponse = $apiClient->getDomainConfig(SITE_DOMAIN);
-$domainConfig = isset($domainConfigResponse['data']) ? $domainConfigResponse['data'] : null;
+// 初始化动态站点配置
+$domainConfig = Utils::initDynamicConfig($apiClient, SITE_DOMAIN);
 error_log("检索页面 域名配置: " . json_encode($domainConfig));
 // 设置视图路径
 $viewsPath = Utils::getViewsPath($apiClient, SITE_DOMAIN);
@@ -37,8 +36,10 @@ if (!empty($hotNews)) {
     }
 }
 
-// 处理搜索
-$keyword = isset($_GET['keyword']) ? trim($_GET['keyword']) : '';
+// 处理搜索 - 支持新旧参数格式
+$keyword = isset($_GET['q']) ? trim($_GET['q']) : (isset($_GET['keyword']) ? trim($_GET['keyword']) : '');
+$category = isset($_GET['category']) ? trim($_GET['category']) : '';
+$sortBy = isset($_GET['sort']) ? trim($_GET['sort']) : 'time';
 $pageNum = isset($_GET['page']) ? intval($_GET['page']) : 1;
 $pageSize = DEFAULT_PAGE_SIZE;
 
@@ -50,12 +51,67 @@ $totalItems = 0;
 $searchStartTime = microtime(true);
 
 if (!empty($keyword)) {
+    // 构建搜索参数
+    $searchParams = [
+        'keyword' => $keyword,
+        'pageNum' => $pageNum,
+        'pageSize' => $pageSize
+    ];
+    
+    // 添加分类过滤
+    if (!empty($category)) {
+        $searchParams['category'] = $category;
+    }
+    
+    // 添加排序参数
+    if (!empty($sortBy)) {
+        $searchParams['sortBy'] = $sortBy;
+    }
+    
     $searchResponse = $apiClient->searchNews($keyword, $pageNum, $pageSize);
     
     if (isset($searchResponse['code']) && $searchResponse['code'] == 200) {
         $searchResults = isset($searchResponse['data']['list']) ? $searchResponse['data']['list'] : [];
         $totalPages = isset($searchResponse['data']['pages']) ? $searchResponse['data']['pages'] : 0;
         $totalItems = isset($searchResponse['data']['total']) ? $searchResponse['data']['total'] : 0;
+        
+        // 客户端排序和过滤（如果API不支持这些参数）
+        if (!empty($searchResults)) {
+            // 分类过滤
+            if (!empty($category)) {
+                $searchResults = array_filter($searchResults, function($item) use ($category) {
+                    return isset($item['category']) && $item['category'] === $category;
+                });
+                $searchResults = array_values($searchResults); // 重新索引
+            }
+            
+            // 排序处理
+            switch ($sortBy) {
+                case 'views':
+                    usort($searchResults, function($a, $b) {
+                        $aViews = isset($a['viewCount']) ? intval($a['viewCount']) : 0;
+                        $bViews = isset($b['viewCount']) ? intval($b['viewCount']) : 0;
+                        return $bViews - $aViews; // 降序
+                    });
+                    break;
+                case 'relevance':
+                    // 按标题匹配度排序
+                    usort($searchResults, function($a, $b) use ($keyword) {
+                        $aScore = substr_count(strtolower($a['title'] ?? ''), strtolower($keyword));
+                        $bScore = substr_count(strtolower($b['title'] ?? ''), strtolower($keyword));
+                        return $bScore - $aScore; // 降序
+                    });
+                    break;
+                case 'time':
+                default:
+                    usort($searchResults, function($a, $b) {
+                        $aTime = strtotime($a['publishTime'] ?? '1970-01-01');
+                        $bTime = strtotime($b['publishTime'] ?? '1970-01-01');
+                        return $bTime - $aTime; // 降序
+                    });
+                    break;
+            }
+        }
     }
 }
 
@@ -64,7 +120,12 @@ $searchTime = microtime(true) - $searchStartTime;
 $totalResults = $totalItems;
 
 // 生成分页HTML
-$urlPattern = '?keyword=' . urlencode($keyword) . '&page={page}';
+$urlParams = [];
+if (!empty($keyword)) $urlParams[] = 'q=' . urlencode($keyword);
+if (!empty($category)) $urlParams[] = 'category=' . urlencode($category);
+if (!empty($sortBy)) $urlParams[] = 'sort=' . urlencode($sortBy);
+$urlParams[] = 'page={page}';
+$urlPattern = '?' . implode('&', $urlParams);
 $pagination = Utils::generatePagination($pageNum, $totalPages, $urlPattern);
 
 // 设置页面标题和描述

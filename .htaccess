@@ -1,0 +1,132 @@
+# 多域名静态页面优先访问配置
+RewriteEngine On
+
+# 分类页面查询参数格式: /category.html?name=xxx 重定向到 category.php
+RewriteCond %{QUERY_STRING} ^name=(.*)$
+RewriteRule ^category\.html$ category.php?name=%1 [L,QSA]
+
+# 直接访问API代理文件
+RewriteRule ^api_proxy\.php$ api_proxy.php [L,QSA]
+
+# 直接访问category.php文件
+RewriteRule ^category\.php$ category.php [L,QSA]
+
+# 直接访问调试文件
+RewriteRule ^test_category\.php$ test_category.php [L,QSA]
+RewriteRule ^debug_category\.php$ debug_category.php [L,QSA]
+
+# 直接访问index.php文件
+RewriteRule ^index\.php$ index.php [L,QSA]
+
+# 直接访问simple_test.php文件
+RewriteRule ^simple_test\.php$ simple_test.php [L,QSA]
+
+# 开启URL重写日志（调试时使用）
+# RewriteLog /tmp/rewrite.log
+# RewriteLogLevel 3
+
+# 获取当前域名
+RewriteCond %{HTTP_HOST} ^(.+)$
+RewriteRule .* - [E=DOMAIN:%1]
+
+# 设置域名对应的静态目录映射
+# localhost:8000 -> localhost
+RewriteCond %{ENV:DOMAIN} ^localhost:8000$
+RewriteRule .* - [E=STATIC_DIR:localhost]
+
+# domain1.com -> domain1
+RewriteCond %{ENV:DOMAIN} ^domain1\.com$
+RewriteRule .* - [E=STATIC_DIR:domain1]
+
+# domain2.com -> domain2
+RewriteCond %{ENV:DOMAIN} ^domain2\.com$
+RewriteRule .* - [E=STATIC_DIR:domain2]
+
+# 默认域名映射
+RewriteCond %{ENV:STATIC_DIR} ^$
+RewriteRule .* - [E=STATIC_DIR:default]
+
+# 阻止直接访问某些文件
+RewriteRule ^(config\.php|api/|includes/|static_handler\.php|generate_static\.php)$ - [F,L]
+
+# 首页重写规则
+RewriteRule ^$ /check_static.php?path=index [L,QSA]
+
+# 新闻详情页: /news/123 或 /news/123.html
+RewriteRule ^news/(\d+)(?:\.html)?$ /check_static.php?path=news/$1 [L,QSA]
+
+# 分类页面: /category/分类名 或 /category/分类名.html
+RewriteRule ^category/([^/]+)(?:\.html)?$ /check_static.php?path=category/$1 [L,QSA]
+
+# 分类分页: /category/分类名/page-2.html
+RewriteRule ^category/([^/]+)/page-(\d+)(?:\.html)?$ /check_static.php?path=category/$1/page-$2 [L,QSA]
+
+# 其他页面: /about, /contact, /privacy, /terms, /tags
+RewriteRule ^(about|contact|privacy|terms|tags)(?:\.html)?$ /check_static.php?path=$1 [L,QSA]
+
+# 静态资源文件直接访问
+RewriteRule ^(assets|uploads)/.*$ - [L]
+
+# 已存在的静态HTML文件直接访问
+RewriteCond %{REQUEST_FILENAME} -f
+RewriteCond %{REQUEST_FILENAME} \.html?$
+RewriteRule .* - [L]
+
+# 如果请求的是PHP文件且存在，则直接访问
+RewriteCond %{REQUEST_FILENAME} -f
+RewriteCond %{REQUEST_FILENAME} \.php$
+RewriteRule .* - [L]
+
+# 其他所有请求都转发到静态处理器
+RewriteRule ^.*$ /check_static.php [L,QSA]
+
+# 缓存设置
+<IfModule mod_expires.c>
+    ExpiresActive On
+    
+    # HTML文件缓存1小时
+    ExpiresByType text/html "access plus 1 hour"
+    
+    # 静态资源长期缓存
+    ExpiresByType text/css "access plus 1 month"
+    ExpiresByType application/javascript "access plus 1 month"
+    ExpiresByType image/png "access plus 1 month"
+    ExpiresByType image/jpg "access plus 1 month"
+    ExpiresByType image/jpeg "access plus 1 month"
+    ExpiresByType image/gif "access plus 1 month"
+    ExpiresByType image/svg+xml "access plus 1 month"
+    ExpiresByType application/pdf "access plus 1 month"
+</IfModule>
+
+# Gzip压缩
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html
+    AddOutputFilterByType DEFLATE text/css
+    AddOutputFilterByType DEFLATE text/javascript
+    AddOutputFilterByType DEFLATE application/javascript
+    AddOutputFilterByType DEFLATE application/json
+    AddOutputFilterByType DEFLATE text/xml
+    AddOutputFilterByType DEFLATE application/xml
+</IfModule>
+
+# 安全头设置
+<IfModule mod_headers.c>
+    Header always set X-Content-Type-Options nosniff
+    Header always set X-Frame-Options SAMEORIGIN
+    Header always set X-XSS-Protection "1; mode=block"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+    
+    # 为静态文件设置缓存头
+    <FilesMatch "\.(css|js|png|jpg|jpeg|gif|svg|pdf)$">
+        Header set Cache-Control "public, max-age=2592000"
+    </FilesMatch>
+    
+    # 为HTML文件设置短期缓存
+    <FilesMatch "\.html?$">
+        Header set Cache-Control "public, max-age=3600, must-revalidate"
+    </FilesMatch>
+</IfModule>
+
+# 错误页面
+ErrorDocument 404 /404.php
+ErrorDocument 500 /500.php 

@@ -6,9 +6,8 @@ require_once 'includes/Utils.php';
 // 初始化API客户端
 $apiClient = new ApiClient();
 
-// 获取域名配置
-$domainConfigResponse = $apiClient->getDomainConfig(SITE_DOMAIN);
-$domainConfig = isset($domainConfigResponse['data']) ? $domainConfigResponse['data'] : null;
+// 初始化动态站点配置
+$domainConfig = Utils::initDynamicConfig($apiClient, SITE_DOMAIN);
 
 // 设置视图路径
 $viewsPath = Utils::getViewsPath($apiClient, SITE_DOMAIN);
@@ -214,7 +213,7 @@ if (isset($news['categoryName'])) {
 // 设置页面标题和描述
 $pageTitle = $news['title'];
 $pageDescription = isset($news['summary']) ? $news['summary'] : '';
-$pageKeywords = '';
+$pageKeywords = $pageTitle;
 
 // 如果有标签，将其用作关键词
 if (isset($news['tags']) && is_array($news['tags'])) {
@@ -223,6 +222,7 @@ if (isset($news['tags']) && is_array($news['tags'])) {
     }, $news['tags']);
     $pageKeywords = implode(',', $tagNames);
 }
+$pageKeywords = $pageTitle;
 
 // 设置规范URL
 $canonicalUrl = 'https://' . $_SERVER['HTTP_HOST'] . '/news.php?id=' . $newsId;

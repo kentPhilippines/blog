@@ -347,9 +347,7 @@ class ApiClient {
         // 处理分类数据，提取category字段和newsCount字段
         if (isset($response['code']) && $response['code'] == 200 && 
             isset($response['data']) && is_array($response['data'])) {
-            
             error_log("原始分类数据: " . json_encode(array_slice($response['data'], 0, 3), JSON_UNESCAPED_UNICODE) . "...");
-            
             $processedData = [];
             foreach ($response['data'] as $item) {
                 if (isset($item['category'])) {
@@ -370,7 +368,6 @@ class ApiClient {
                     $processedData[] = $categoryData;
                 }
             }
-            
             error_log("处理后的分类数据: " . json_encode(array_slice($processedData, 0, 3), JSON_UNESCAPED_UNICODE) . "...");
             $response['data'] = $processedData;
         } else {

@@ -22,7 +22,7 @@
             <form action="/search.php" method="get" role="search">
                 <div class="ne-search-input-group">
                     <input type="text" 
-                           name="keyword" 
+                           name="q" 
                            class="ne-search-page-input" 
                            placeholder="输入关键词搜索新闻" 
                            aria-label="搜索新闻"
@@ -31,7 +31,60 @@
                         <i class="fas fa-search"></i>
                     </button>
                 </div>
+                <div class="ne-search-filters-page">
+                    <select name="category" class="ne-search-filter-page">
+                        <option value="">所有分类</option>
+                        <?php if (!empty($categories)): ?>
+                            <?php foreach ($categories as $cat): ?>
+                                <?php $catName = is_array($cat) ? ($cat['name'] ?? '') : $cat; ?>
+                                <option value="<?php echo htmlspecialchars($catName); ?>"
+                                        <?php echo (isset($category) && $category === $catName) ? 'selected' : ''; ?>>
+                                    <?php echo htmlspecialchars($catName); ?>
+                                </option>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+                    </select>
+                    <select name="sort" class="ne-search-filter-page">
+                        <option value="time" <?php echo (isset($sortBy) && $sortBy === 'time') ? 'selected' : ''; ?>>按时间排序</option>
+                        <option value="relevance" <?php echo (isset($sortBy) && $sortBy === 'relevance') ? 'selected' : ''; ?>>按相关性排序</option>
+                        <option value="views" <?php echo (isset($sortBy) && $sortBy === 'views') ? 'selected' : ''; ?>>按热度排序</option>
+                    </select>
+                </div>
             </form>
+            
+            <!-- 当前筛选条件 -->
+            <?php if (!empty($category) || !empty($sortBy) && $sortBy !== 'time'): ?>
+            <div class="ne-search-current-filters">
+                <span>当前筛选：</span>
+                <?php if (!empty($category)): ?>
+                <div class="ne-search-current-filter">
+                    分类：<?php echo htmlspecialchars($category); ?>
+                    <a href="<?php 
+                        $clearCategoryUrl = $_SERVER['REQUEST_URI'];
+                        $clearCategoryUrl = preg_replace('/[&?]category=[^&]*/', '', $clearCategoryUrl);
+                        $clearCategoryUrl = preg_replace('/\?&/', '?', $clearCategoryUrl);
+                        echo htmlspecialchars($clearCategoryUrl);
+                    ?>" class="fa fa-times" title="清除分类筛选"></a>
+                </div>
+                <?php endif; ?>
+                <?php if (!empty($sortBy) && $sortBy !== 'time'): ?>
+                <div class="ne-search-current-filter">
+                    排序：<?php 
+                        echo $sortBy === 'relevance' ? '相关性' : ($sortBy === 'views' ? '热度' : '时间'); 
+                    ?>
+                    <a href="<?php 
+                        $clearSortUrl = $_SERVER['REQUEST_URI'];
+                        $clearSortUrl = preg_replace('/[&?]sort=[^&]*/', '', $clearSortUrl);
+                        $clearSortUrl = preg_replace('/\?&/', '?', $clearSortUrl);
+                        if (strpos($clearSortUrl, '?') === false && !empty($keyword)) {
+                            $clearSortUrl .= '?q=' . urlencode($keyword);
+                        }
+                        echo htmlspecialchars($clearSortUrl);
+                    ?>" class="fa fa-times" title="重置为时间排序"></a>
+                </div>
+                <?php endif; ?>
+            </div>
+            <?php endif; ?>
         </div>
     </div>
 
@@ -62,13 +115,15 @@
                         </p>
                         <?php endif; ?>
                         <div class="ne-search-item-meta">
-                            <?php if (!empty($result['category'])): ?>
-                            <span class="ne-search-item-category">
-                                <a href="/category.php?name=<?php echo urlencode($result['category']); ?>">
-                                    <i class="fas fa-folder"></i> <?php echo htmlspecialchars($result['category']); ?>
-                                </a>
-                            </span>
-                            <?php endif; ?>
+                            <div class="ne-news-meta">
+                                <?php if (!empty($result['category'])): ?>
+                                <span class="ne-search-item-category">
+                                    <a href="/category.html?name=<?php echo urlencode(Utils::categoryToSlug($result['category'])); ?>">
+                                        <i class="fas fa-folder"></i> <?php echo htmlspecialchars($result['category']); ?>
+                                    </a>
+                                </span>
+                                <?php endif; ?>
+                            </div>
                             <?php if (!empty($result['publishTime'])): ?>
                             <span class="ne-search-item-time">
                                 <i class="far fa-clock"></i> <?php echo date('Y-m-d H:i', strtotime($result['publishTime'])); ?>
@@ -131,7 +186,7 @@
                 <ul class="ne-hot-searches">
                     <?php foreach ($hotSearches as $index => $hotSearch): ?>
                     <li class="ne-hot-search-item">
-                        <a href="/search.php?keyword=<?php echo urlencode($hotSearch['keyword']); ?>" class="ne-hot-search-link">
+                        <a href="/search.php?q=<?php echo urlencode($hotSearch['keyword']); ?>" class="ne-hot-search-link">
                             <span class="ne-hot-search-num"><?php echo $index + 1; ?></span>
                             <span class="ne-hot-search-text"><?php echo htmlspecialchars($hotSearch['keyword']); ?></span>
                             <?php if (!empty($hotSearch['count'])): ?>
@@ -164,6 +219,85 @@
     </div>
 </div>
 
+<!-- 搜索页面过滤器样式 -->
+<style>
+.ne-search-filters-page {
+    display: flex;
+    gap: 15px;
+    margin-top: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.ne-search-filter-page {
+    padding: 10px 15px;
+    border: 2px solid #e0e0e0;
+    border-radius: 25px;
+    background: white;
+    color: #333;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    outline: none;
+    min-width: 120px;
+}
+
+.ne-search-filter-page:hover,
+.ne-search-filter-page:focus {
+    border-color: #667eea;
+    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);
+}
+
+.ne-search-filter-page option {
+    background: white;
+    color: #333;
+    padding: 5px;
+}
+
+/* 移动端适配 */
+@media (max-width: 768px) {
+    .ne-search-filters-page {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .ne-search-filter-page {
+        width: 100%;
+        min-width: auto;
+    }
+}
+
+/* 当前筛选条件提示 */
+.ne-search-current-filters {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+    flex-wrap: wrap;
+    font-size: 14px;
+    color: #666;
+}
+
+.ne-search-current-filter {
+    background: #f0f0f0;
+    padding: 4px 12px;
+    border-radius: 15px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.ne-search-current-filter .fa-times {
+    cursor: pointer;
+    color: #999;
+    transition: color 0.2s ease;
+}
+
+.ne-search-current-filter .fa-times:hover {
+    color: #ff4444;
+}
+</style>
+
 <!-- 搜索历史处理脚本 -->
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -190,7 +324,7 @@ function loadSearchHistory() {
     searchHistory.forEach(function(item) {
         html += `
             <li class="ne-search-history-item">
-                <a href="/search.php?keyword=${encodeURIComponent(item)}" class="ne-search-history-link">
+                <a href="/search.php?q=${encodeURIComponent(item)}" class="ne-search-history-link">
                     <i class="fas fa-history"></i>
                     <span>${escapeHtml(item)}</span>
                 </a>

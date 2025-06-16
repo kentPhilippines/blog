@@ -26,17 +26,17 @@
                     <div class="collapse navbar-collapse" id="navbarNav">
                         <ul class="navbar-nav me-auto">
                             <li class="nav-item">
-                                <a class="nav-link <?php echo empty($_GET['category']) && basename($_SERVER['PHP_SELF']) == 'index.php' ? 'active' : ''; ?>" href="/">首页</a>
+                                <a class="nav-link <?php echo empty($_GET['category']) && basename($_SERVER['PHP_SELF']) == 'index.html' ? 'active' : ''; ?>" href="/">首页</a>
                             </li>
                             <?php if (isset($categories) && is_array($categories)): ?>
                                 <?php foreach ($categories as $category): ?>
                                 <li class="nav-item">
-                                    <a class="nav-link <?php echo isset($_GET['category']) && $_GET['category'] == $category['name'] ? 'active' : ''; ?>" href="/category.php?name=<?php echo urlencode($category['name']); ?>"><?php echo $category['name']; ?></a>
+                                    <a class="nav-link <?php echo isset($_GET['category']) && $_GET['category'] == $category['name'] ? 'active' : ''; ?>" href="/category.html?name=<?php echo urlencode($category['name']); ?>"><?php echo $category['name']; ?></a>
                                 </li>
                                 <?php endforeach; ?>
                             <?php endif; ?>
                         </ul>
-                        <form class="d-flex" action="/search.php" method="GET">
+                        <form class="d-flex" action="/search.html" method="GET">
                             <input class="form-control me-2" type="search" name="keyword" placeholder="搜索新闻..." aria-label="Search" value="<?php echo isset($_GET['keyword']) ? htmlspecialchars($_GET['keyword']) : ''; ?>">
                             <button class="btn btn-outline-success" type="submit">搜索</button>
                         </form>

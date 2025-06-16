@@ -51,7 +51,7 @@ $pageKeywords = '联系我们,客户服务,反馈建议,' . ($domainConfig['titl
 
         <div class="ne-contact-form">
             <h2>在线留言</h2>
-            <form action="/api/contact.php" method="post" class="ne-form">
+            <form action="/api/contact.html" method="post" class="ne-form">
                 <div class="ne-form-group">
                     <label for="name">姓名</label>
                     <input type="text" id="name" name="name" required 

@@ -12,7 +12,7 @@
                     <div class="tag-cloud">
                         <?php if (isset($tags) && is_array($tags)): ?>
                             <?php foreach (array_slice($tags, 0, 10) as $tag): ?>
-                                <a href="/tag.php?name=<?php echo urlencode($tag['name']); ?>" class="tag-item" style="font-size: <?php echo 0.8 + ($tag['frequency'] / 50) * 0.5; ?>rem;">
+                                <a href="/tag.html?name=<?php echo urlencode($tag['name']); ?>" class="tag-item" style="font-size: <?php echo 0.8 + ($tag['frequency'] / 50) * 0.5; ?>rem;">
                                     <?php echo $tag['name']; ?>
                                 </a>
                             <?php endforeach; ?>
@@ -22,10 +22,10 @@
                 <div class="col-md-4">
                     <h5>关于我们</h5>
                     <ul class="list-unstyled">
-                        <li><a href="/about.php">关于我们</a></li>
-                        <li><a href="/contact.php">联系我们</a></li>
-                        <li><a href="/privacy.php">隐私政策</a></li>
-                        <li><a href="/terms.php">使用条款</a></li>
+                        <li><a href="/about.html">关于我们</a></li>
+                        <li><a href="/contact.html">联系我们</a></li>
+                        <li><a href="/privacy.html">隐私政策</a></li>
+                        <li><a href="/terms.html">使用条款</a></li>
                     </ul>
                 </div>
             </div>

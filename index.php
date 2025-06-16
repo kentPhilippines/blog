@@ -68,16 +68,92 @@ $categories = isset($categoryResponse['data']) ? $categoryResponse['data'] : [];
 if (empty($categories)) {
     // 如果API没有返回分类数据，使用默认分类
     $categories = [
-        ['name' => '头条', 'newsCount' => 0],
-        ['name' => '国内', 'newsCount' => 0],
-        ['name' => '国际', 'newsCount' => 0],
-        ['name' => '军事', 'newsCount' => 0],
-        ['name' => '财经', 'newsCount' => 0],
-        ['name' => '科技', 'newsCount' => 0],
-        ['name' => '体育', 'newsCount' => 0],
-        ['name' => '娱乐', 'newsCount' => 0]
+        ['name' => '中国足球', 'newsCount' => 0, 'slug' => 'zhongguozuqiu'],
+        ['name' => '西甲', 'newsCount' => 0, 'slug' => 'xijia'],
+        ['name' => 'CBA', 'newsCount' => 0, 'slug' => 'cba'],
+        ['name' => '英超', 'newsCount' => 0, 'slug' => 'yingchao'],
+        ['name' => '羽毛球', 'newsCount' => 0, 'slug' => 'yumaoqiu'],
+        ['name' => 'NBA', 'newsCount' => 0, 'slug' => 'nba'],
+        ['name' => '国字号', 'newsCount' => 0, 'slug' => 'guozihao'],
+        ['name' => '乒乓球', 'newsCount' => 0, 'slug' => 'pingpangqiu'],
+        ['name' => '意甲', 'newsCount' => 0, 'slug' => 'yijia'],
+        ['name' => '亚冠', 'newsCount' => 0, 'slug' => 'yaguan'],
+        ['name' => '法甲', 'newsCount' => 0, 'slug' => 'fajia'],
+        ['name' => '欧冠', 'newsCount' => 0, 'slug' => 'ouguan'],
+        ['name' => '游泳', 'newsCount' => 0, 'slug' => 'youyong'],
+        ['name' => '德甲', 'newsCount' => 0, 'slug' => 'dejia'],
+        ['name' => '台球', 'newsCount' => 0, 'slug' => 'taiqiu'],
+        ['name' => '赛车', 'newsCount' => 0, 'slug' => 'saiche'],
+        ['name' => '田径', 'newsCount' => 0, 'slug' => 'tianjing'],
+        ['name' => '排球', 'newsCount' => 0, 'slug' => 'paiqiu']
     ];
 }
+
+
+// 为每个分类添加拼音字段
+foreach ($categories as &$category) {
+    $name = $category['name'];
+    switch ($name) {
+        case '中国足球':
+            $category['pinyin'] = 'zhongguozuqiu';
+            break;
+        case '西甲':
+            $category['pinyin'] = 'xijia';
+            break;
+        case 'CBA':
+            $category['pinyin'] = 'CBA';
+            break;
+        case '英超':
+            $category['pinyin'] = 'yingchao';
+            break;
+        case '羽毛球':
+            $category['pinyin'] = 'yumaoqiu';
+            break;
+        case 'NBA':
+            $category['pinyin'] = 'NBA';
+            break;
+        case '国字号':
+            $category['pinyin'] = 'guozihao';
+            break;
+        case '乒乓球':
+            $category['pinyin'] = 'pingpangqiu';
+            break;
+        case '意甲':
+            $category['pinyin'] = 'yijia';
+            break;
+        case '亚冠':
+            $category['pinyin'] = 'yaguan';
+            break;
+        case '法甲':
+            $category['pinyin'] = 'fajia';
+            break;
+        case '欧冠':
+            $category['pinyin'] = 'ouguan';
+            break;
+        case '游泳':
+            $category['pinyin'] = 'youyong';
+            break;
+        case '德甲':
+            $category['pinyin'] = 'dejia';
+            break;
+        case '台球':
+            $category['pinyin'] = 'taiqiu';
+            break;
+        case '赛车':
+            $category['pinyin'] = 'saiche';
+            break;
+        case '田径':
+            $category['pinyin'] = 'tianjing';
+            break;
+        case '排球':
+            $category['pinyin'] = 'paiqiu';
+            break;
+    }
+}
+
+
+
+
 
 // 获取标签列表
 $tagResponse = $apiClient->getTagList();
@@ -86,6 +162,20 @@ $tags = isset($tagResponse['data']) ? $tagResponse['data'] : [];
 // 获取热门新闻
 $hotNewsResponse = $apiClient->getHotNews();
 $hotNews = isset($hotNewsResponse['data']) ? $hotNewsResponse['data'] : [];
+
+// 获取NBA新闻
+$nbaNewsResponse = $apiClient->getNewsList(1, 4, 'NBA');
+$nbaNews = isset($nbaNewsResponse['data']['list']) ? $nbaNewsResponse['data']['list'] : [];
+error_log("NBA新闻数据: " . json_encode($nbaNews, JSON_UNESCAPED_UNICODE));
+
+// 获取CBA新闻
+$cbaNewsResponse = $apiClient->getNewsList(1, 4, 'CBA');
+$cbaNews = isset($cbaNewsResponse['data']['list']) ? $cbaNewsResponse['data']['list'] : [];
+error_log("CBA新闻数据: " . json_encode($cbaNews, JSON_UNESCAPED_UNICODE));
+
+// 为模板创建数据副本（避免array_shift修改原数组）
+$nbaNewsForTemplate = $nbaNews;
+$cbaNewsForTemplate = $cbaNews;
 
 // 获取新闻列表
 $pageNum = isset($_GET['page']) ? intval($_GET['page']) : 1;

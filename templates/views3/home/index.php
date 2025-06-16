@@ -4,118 +4,10 @@
  */
 ?>
 <div class="ne-home">
-    <!-- 添加移动端导航栏 -->
-    <nav class="ne-mobile-nav">
-        <div class="ne-mobile-nav-scroll">
-            <div class="ne-mobile-nav-inner">
-                <a href="/" class="ne-mobile-nav-item<?php echo empty($GLOBALS['categoryName']) ? ' active' : ''; ?>">
-                    <i class="fas fa-home"></i>
-                    <span>首页</span>
-                </a>
-                <?php if (!empty($categories)): ?>
-                    <?php foreach ($categories as $cat): ?>
-                        <?php 
-                        $catName = is_array($cat) ? ($cat['name'] ?? '') : $cat;
-                        $catIcon = is_array($cat) ? ($cat['icon'] ?? 'fas fa-newspaper') : 'fas fa-newspaper';
-                        $isActive = isset($GLOBALS['categoryName']) && $GLOBALS['categoryName'] === $catName;
-                        ?>
-                        <a href="/category.php?name=<?php echo urlencode($catName); ?>" 
-                           class="ne-mobile-nav-item<?php echo $isActive ? ' active' : ''; ?>">
-                            <i class="<?php echo htmlspecialchars($catIcon); ?>"></i>
-                            <span><?php echo htmlspecialchars($catName); ?></span>
-                        </a>
-                    <?php endforeach; ?>
-                <?php endif; ?>
-            </div>
-        </div>
-    </nav>
+    <!-- 移动端导航由header.php统一提供 -->
 
-    <!-- 添加移动端导航栏的样式 -->
-    <style>
-    .ne-mobile-nav {
-        display: none;
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        background: #fff;
-        box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
-        z-index: 1000;
-        border-top: 1px solid #eee;
-    }
+    <!-- 移动端导航样式已在header.php中定义 -->
 
-    .ne-mobile-nav-scroll {
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-        scrollbar-width: none; /* Firefox */
-        -ms-overflow-style: none; /* IE and Edge */
-    }
-
-    .ne-mobile-nav-scroll::-webkit-scrollbar {
-        display: none; /* Chrome, Safari, Opera */
-    }
-
-    .ne-mobile-nav-inner {
-        display: flex;
-        padding: 8px 12px;
-        min-width: min-content;
-    }
-
-    .ne-mobile-nav-item {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        color: #666;
-        text-decoration: none;
-        font-size: 12px;
-        padding: 4px 0;
-        min-width: 56px;
-        margin: 0 8px;
-        position: relative;
-    }
-
-    .ne-mobile-nav-item i {
-        font-size: 20px;
-        margin-bottom: 4px;
-    }
-
-    .ne-mobile-nav-item span {
-        font-size: 12px;
-        white-space: nowrap;
-    }
-
-    .ne-mobile-nav-item.active {
-        color: #1a73e8;
-    }
-
-    .ne-mobile-nav-item.active::after {
-        content: '';
-        position: absolute;
-        bottom: -4px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 12px;
-        height: 2px;
-        background: #1a73e8;
-        border-radius: 1px;
-    }
-
-    /* 移动端适配 */
-    @media (max-width: 768px) {
-        .ne-mobile-nav {
-            display: block;
-        }
-
-        .ne-home {
-            padding-bottom: 60px;
-        }
-
-        .ne-content {
-            padding-bottom: 20px;
-        }
-    }
-    </style>
 
     <!-- 移动端头条轮播 -->
     <div class="ne-headline-mobile">
@@ -128,7 +20,7 @@
             ?>
             <div class="ne-headline-swiper-slide <?php echo $index === 0 ? 'active' : ''; ?>" data-index="<?php echo $index; ?>">
                 <div class="ne-headline-image">
-                    <a href="/news.php?id=<?php echo htmlspecialchars($news['id'] ?? ''); ?>" class="white">
+                    <a href="/news.html?id=<?php echo htmlspecialchars($news['id'] ?? ''); ?>" class="white">
                         <img src="<?php echo htmlspecialchars($news['coverImage'] ?? ''); ?>" 
                              alt="<?php echo htmlspecialchars($news['title'] ?? ''); ?>">
                     </a>
@@ -140,7 +32,7 @@
                 </div>
                 <div class="ne-headline-content">
                     <h2 class="ne-headline-title">
-                        <a href="/news.php?id=<?php echo htmlspecialchars($news['id'] ?? ''); ?>" class="white">
+                        <a href="/news.html?id=<?php echo htmlspecialchars($news['id'] ?? ''); ?>" class="white">
                             <?php echo htmlspecialchars($news['title'] ?? ''); ?>
                         </a>
                     </h2>
@@ -171,7 +63,6 @@
             <?php endif; ?>
         </div>
     </div>
-
     <!-- 头条新闻区域 -->
     <div class="ne-headlines">
         <?php
@@ -181,7 +72,7 @@
         ?>
         <div class="ne-headline-main">
             <div class="ne-headline-image">
-                <a href="/news.php?id=<?php echo htmlspecialchars($carouselNews[0]['id'] ?? ''); ?>" class="white">
+                <a href="/news.html?id=<?php echo htmlspecialchars($carouselNews[0]['id'] ?? ''); ?>" class="white">
                     <img src="<?php echo htmlspecialchars($carouselNews[0]['coverImage'] ?? ''); ?>" 
                          alt="<?php echo htmlspecialchars($carouselNews[0]['title'] ?? ''); ?>">
                 </a>
@@ -192,11 +83,11 @@
                 <?php endif; ?>
             </div>
             <div class="ne-headline-content">
-                <h1 class="ne-headline-title">
-                    <a href="/news.php?id=<?php echo htmlspecialchars($carouselNews[0]['id'] ?? ''); ?>" class="white">
+                <h2 class="ne-headline-title">
+                        <a href="/news.html?id=<?php echo htmlspecialchars($carouselNews[0]['id'] ?? ''); ?>" class="white">
                         <?php echo htmlspecialchars($carouselNews[0]['title'] ?? ''); ?>
                     </a>
-                </h1>
+                </h2>
                 <?php if (!empty($carouselNews[0]['summary'])): ?>
                 <p class="ne-headline-summary">
                     <?php echo htmlspecialchars($carouselNews[0]['summary']); ?>
@@ -245,11 +136,11 @@
                     <?php endif; ?>
                 </div>
                 <div class="ne-headline-item-content">
-                    <h3 class="ne-headline-item-title">
+                    <h2 class="ne-headline-item-title">
                         <a href="/news.php?id=<?php echo htmlspecialchars($news['id'] ?? ''); ?>" class="white">
                             <?php echo htmlspecialchars($news['title'] ?? ''); ?>
                         </a>
-                    </h3>
+                    </h2>
                     <div class="ne-headline-item-meta">
                         <?php if (!empty($news['source'])): ?>
                         <span class="ne-headline-item-source">
@@ -277,20 +168,14 @@
                     <span class="ne-logo-nba" data-text="NBA"></span>
                     NBA新闻
                 </div>
-                <a href="/category.php?name=NBA" class="ne-basketball-more">
+                <a href="/category.php?name=<?php echo urlencode(Utils::categoryToSlug('NBA')); ?>" class="ne-basketball-more">
                     更多 <i class="fas fa-angle-right"></i>
                 </a>
             </div>
             <div class="ne-basketball-content">
                 <?php
-                // 获取NBA新闻
-                $nbaNews = array_filter($newsList, function($news) {
-                    return isset($news['category']) && $news['category'] === 'NBA';
-                });
-                $nbaNews = array_slice($nbaNews, 0, 4);
-                
-                if (!empty($nbaNews)):
-                    $mainNews = array_shift($nbaNews); // 获取第一条作为主要新闻
+                if (!empty($nbaNewsForTemplate)):
+                    $mainNews = array_shift($nbaNewsForTemplate); // 获取第一条作为主要新闻
                 ?>
                     <div class="ne-basketball-main">
                         <img src="<?php echo htmlspecialchars($mainNews['coverImage'] ?? ''); ?>" alt="" class="ne-basketball-main-image">
@@ -299,7 +184,7 @@
                         </a>
                     </div>
                     <div class="ne-basketball-list">
-                        <?php foreach ($nbaNews as $news): ?>
+                        <?php foreach ($nbaNewsForTemplate as $news): ?>
                         <div class="ne-basketball-item">
                             <img src="<?php echo htmlspecialchars($news['coverImage'] ?? ''); ?>" alt="" class="ne-basketball-item-image">
                             <div class="ne-basketball-item-info">
@@ -330,15 +215,15 @@
                     <span class="ne-logo-cba" data-text="CBA"></span>
                     CBA新闻
                 </div>
-                <a href="/category.php?name=CBA" class="ne-basketball-more">
+                <a href="/category.php?name=<?php echo urlencode(Utils::categoryToSlug('CBA')); ?>" class="ne-basketball-more">
                     更多 <i class="fas fa-angle-right"></i>
                 </a>
             </div>
             <div class="ne-basketball-content">
                 <?php
-                if (!empty($cbaNews)):
+                if (!empty($cbaNewsForTemplate)):
                     error_log("开始处理CBA新闻数据展示");
-                    $mainNews = array_shift($cbaNews); // 获取第一条作为主要新闻
+                    $mainNews = array_shift($cbaNewsForTemplate); // 获取第一条作为主要新闻
                 ?>
                     <div class="ne-basketball-main">
                         <img src="<?php echo htmlspecialchars($mainNews['coverImage'] ?? ''); ?>" alt="" class="ne-basketball-main-image">
@@ -347,7 +232,7 @@
                         </a>
                     </div>
                     <div class="ne-basketball-list">
-                        <?php foreach ($cbaNews as $news): ?>
+                        <?php foreach ($cbaNewsForTemplate as $news): ?>
                         <div class="ne-basketball-item">
                             <img src="<?php echo htmlspecialchars($news['coverImage'] ?? ''); ?>" alt="" class="ne-basketball-item-image">
                             <div class="ne-basketball-item-info">
@@ -400,7 +285,7 @@
                     <div class="ne-news-meta">
                         <?php if (!empty($news['category'])): ?>
                         <span class="ne-news-category">
-                            <a href="/category.php?name=<?php echo urlencode($news['category']); ?>">
+                            <a href="/category.php?name=<?php echo urlencode(Utils::categoryToSlug($news['category'])); ?>">
                                 <?php echo htmlspecialchars($news['category']); ?>
                             </a>
                         </span>
@@ -485,11 +370,6 @@
 document.addEventListener('DOMContentLoaded', function() {
     // 初始化头条轮播
     initHeadlineSwiper();
-    
-    // 加载NBA新闻
-    loadCategoryNews('NBA');
-    // 加载CBA新闻
-    loadCategoryNews('CBA');
 });
 
 // 初始化头条轮播功能
@@ -578,98 +458,8 @@ function initHeadlineSwiper() {
     });
 }
 
-function loadCategoryNews(category) {
-    fetch(`/api_proxy.php?action=getNewsList&categoryName=${category}&pageSize=4`)
-        .then(response => response.json())
-        .then(data => {
-            if (data.code === 200 && data.data && data.data.list) {
-                updateNewsSection(category, data.data.list);
-            } else {
-                showError(category);
-            }
-        })
-        .catch(error => {
-            console.error('加载' + category + '新闻失败:', error);
-            showError(category);
-        });
-}
+// 移动端导航JavaScript已在header.php中定义
 
-function updateNewsSection(category, newsList) {
-    if (newsList.length === 0) {
-        return;
-    }
-
-    const container = document.querySelector(`.ne-basketball-card[data-category="${category}"] .ne-basketball-content`);
-    if (!container) {
-        return;
-    }
-
-    // 获取第一条新闻作为主要新闻
-    const mainNews = newsList[0];
-    const otherNews = newsList.slice(1);
-
-    // 更新主要新闻
-    const mainNewsHtml = `
-        <div class="ne-basketball-main">
-            <div class="ne-basketball-main-image">
-                <img src="${mainNews.coverImage || ''}" alt="">
-                ${mainNews.category ? `<span class="ne-basketball-category">${mainNews.category}</span>` : ''}
-            </div>
-            <div class="ne-basketball-main-content">
-                <h3 class="ne-basketball-main-title">
-                    <a href="/news.php?id=${mainNews.id}">
-                        ${mainNews.title}
-                    </a>
-                </h3>
-                ${mainNews.summary ? `<p class="ne-basketball-main-summary">${mainNews.summary}</p>` : ''}
-                <div class="ne-basketball-main-meta">
-                    ${mainNews.source ? `<span class="ne-basketball-source"><i class="fas fa-newspaper"></i> ${mainNews.source}</span>` : ''}
-                    ${mainNews.publishTime ? `<span class="ne-basketball-time"><i class="far fa-clock"></i> ${formatDate(mainNews.publishTime)}</span>` : ''}
-                    ${mainNews.viewCount ? `<span class="ne-basketball-views"><i class="far fa-eye"></i> ${mainNews.viewCount}</span>` : ''}
-                </div>
-            </div>
-        </div>
-    `;
-
-    // 更新其他新闻列表
-    const newsListHtml = `
-        <div class="ne-basketball-list">
-            ${otherNews.map(news => `
-                <div class="ne-basketball-item">
-                    <img src="${news.coverImage || ''}" alt="" class="ne-basketball-item-image">
-                    <div class="ne-basketball-item-info">
-                        <h4 class="ne-basketball-item-title">
-                            <a href="/news.php?id=${news.id}">
-                                ${news.title}
-                            </a>
-                        </h4>
-                        <div class="ne-basketball-item-meta">
-                            ${news.publishTime ? formatDate(news.publishTime) : ''}
-                        </div>
-                    </div>
-                </div>
-            `).join('')}
-        </div>
-    `;
-
-    container.innerHTML = mainNewsHtml + newsListHtml;
-}
-
-function showError(category) {
-    const container = document.querySelector(`.ne-basketball-card[data-category="${category}"] .ne-basketball-content`);
-    if (container) {
-        container.innerHTML = '<div class="ne-empty-message">暂无' + category + '新闻</div>';
-    }
-}
-
-function formatDate(dateStr) {
-    const date = new Date(dateStr);
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    const hours = String(date.getHours()).padStart(2, '0');
-    const minutes = String(date.getMinutes()).padStart(2, '0');
-    return `${month}-${day} ${hours}:${minutes}`;
-}
 </script>
 
 </div> <!-- 结束.ne-home div --> 

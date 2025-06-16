@@ -8,7 +8,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo htmlspecialchars($pageTitle ?? SITE_NAME); ?> - <?php echo htmlspecialchars(SITE_NAME); ?></title>
+    <title><?php echo htmlspecialchars($pageKeywords ?? SITE_NAME); ?> - <?php echo htmlspecialchars(SITE_NAME); ?></title>
     <meta name="description" content="<?php echo htmlspecialchars($pageDescription ?? SITE_DESCRIPTION); ?>">
     <meta name="keywords" content="<?php echo htmlspecialchars($pageKeywords ?? SITE_KEYWORDS); ?>">
     
@@ -35,6 +35,7 @@
     <?php if (isset($extraHead)) echo $extraHead; ?>
 </head>
 <body>
+ 
     <!-- 头部区域 -->
     <?php include 'header.php'; ?>
     
